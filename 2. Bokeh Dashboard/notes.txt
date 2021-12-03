@@ -1,0 +1,33 @@
+Data Trimming
+- Command used for trimming the data to 'open in 2020' only:
+grep '^[0-9]*,../../2020' nyc_311_limit.csv > trimmed_2020.csv
+- Command used to trim trimmed_2020.csv to only those with zipcode (in col 9):
+awk -F',' '$9 ~ /[0-9][0-9][0-9][0-9][0-9]/ { print $0 }' trimmed.csv > trimmed_2020_zipcode.csv
+- Command used to remove any entries that don't have an end date
+awk -F ',' '$3!=""' trimmed_2020_zipcode.csv > trimmed_202_zipcode_enddate.csv
+
+
+
+Setting up Jupyter Notebook
+- After installing jupyter, execute "jupyter notebook password" to set a password (I put yannbonzom)
+- Execute "jupyter notebook --no-browser --ip=0.0.0.0 --port=8080" on the server
+- Access the website on http://3.22.120.39:8080 website 
+Note: I am running the Jupyter server via tmux, access via "tmux attach -t jupyter_server_hw4"
+
+
+
+How I processed the data
+- Eliminated all unnecessary columns using eliminate_columns.py
+- Used filter_correct_date_entries.py to remove any entries with negative duration & also calculate all durations in new csv
+- Used zip_duration_endMonth.py to extract endMonths for each entry and keep only those three columns for faster processing
+- Used monthly_averages.py to generate 1 csv file per zip code as well as a all.csv for monthly averages for each month
+
+
+
+Bokeh Dashboard Notes
+- Install via "pip install bokeh"
+- In nyc_dash dir, have a nyc_dash.py file with app logic
+- Run dashboard via "bokeh serve --show --address 0.0.0.0 --allow-websocket-origin=3.22.120.39:8080 --port=8080 nyc_dash.py"
+- Access dashboard via "http://3.22.120.39:8080/nyc_dash?username=nyc&password=iheartnyc"
+    - Will only work for correct url params, otherwise just blank
+- It is being run on server via tmux. Access via: "tmux attach -t hw4"
